@@ -6,6 +6,7 @@ from app.db import get_connection
 load_dotenv()
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+GROQ_CONCEPTS_MODEL = os.environ.get("GROQ_CONCEPTS_MODEL", "openai/gpt-oss-20b")
 
 def extract_concepts(text):
     """Sends the journal text to Groq and returns a comma-separated string of concepts."""
@@ -23,7 +24,7 @@ def extract_concepts(text):
                 },
                 {"role": "user", "content": str(text)}
             ],
-            model="llama-3.1-8b-instant",
+            model=GROQ_CONCEPTS_MODEL,
             temperature=0.3,
         )
         return completion.choices[0].message.content.strip()

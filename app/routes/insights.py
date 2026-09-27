@@ -18,7 +18,7 @@ retrieval_query = """SELECT j.id, j.date, j.raw_text, e.sentiment, e.concepts,e.
 FROM journal_entries j
 JOIN entry_features e ON j.id = e.entry_id
 ORDER BY distance
-LIMIT 5;"""
+LIMIT %s;"""
 
 concept_stats_query = """
 SELECT lower(concept) AS concept,
@@ -38,7 +38,7 @@ If the entries don't contain enough to answer, say so plainly.
 Sentiment scores run from -1 (very negative) to +1 (very positive)."""
 
 @insights_router.get("/insights")
-def insights(q:str):
+def insights(q:str,k: int=5):
    
     response = co.embed(
     texts=[q],
@@ -53,7 +53,7 @@ def insights(q:str):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(retrieval_query, (query_vector,))
+    cursor.execute(retrieval_query, (query_vector, k))
     tuple_rows = cursor.fetchall()
     
     search_list = []
@@ -120,6 +120,8 @@ def insights(q:str):
 
     stats_lines = []
     for stats_row in concept_stats:
+        if stats_row["entry_count"] < 2:
+            continue
         stats_lines.append(
         f"- {stats_row['concept']}: appears in {stats_row['entry_count']} entries, "
         f"avg sentiment {stats_row['avg_sentiment']:.2f}"
