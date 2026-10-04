@@ -30,12 +30,13 @@ WHERE lower(concept) = ANY(%s)
 GROUP BY lower(concept)
 ORDER BY entry_count DESC;
 """
-
 SYSTEM_PROMPT = """You answer questions about a person's private journal.
 Use ONLY the journal entries and statistics provided. Do not invent details.
 Cite entries by their label, like [Entry 12], whenever you make a claim.
 If the entries don't contain enough to answer, say so plainly.
-Sentiment scores run from -1 (very negative) to +1 (very positive)."""
+Sentiment scores run from -1 (very negative) to +1 (very positive).
+Do not use markdown tables. Use bullet points and headers only.
+Keep your answer concise — under 250 words."""
 
 @insights_router.get("/insights")
 def insights(q:str,k: int=5):
