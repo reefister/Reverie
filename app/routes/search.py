@@ -18,8 +18,10 @@ def search(word=None):
     tuple_rows = cursor.fetchall()
 
     search_list = []
-    for id,date,raw_text_value in tuple_rows:
+    for id_value,date_value,raw_text_value in tuple_rows:
         dict_row = {}
+        dict_row["id"] = id_value
+        dict_row["date"] = date_value
         dict_row["raw_text"] = raw_text_value
         search_list.append(dict_row)
     
