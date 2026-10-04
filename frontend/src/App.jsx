@@ -15,6 +15,10 @@ export default function App() {
       .then(data => setEntries(data))
   }, [offset, isSearching])
 
+  useEffect(() => {
+    if (query.trim()) handleSearch()
+  }, [searchMode])
+
   const handleSearch = () => {
     if (!query.trim()) {
       setIsSearching(false)
@@ -39,7 +43,6 @@ export default function App() {
     <div className="min-h-screen bg-gray-950 text-white p-8 max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold mb-8">CJIS — Journal Entries</h1>
 
-      {/* Search bar */}
       <div className="mb-6 space-y-3">
         <input
           type="text"
@@ -53,7 +56,6 @@ export default function App() {
           className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-sm outline-none focus:border-gray-500"
         />
 
-        {/* Search mode toggle */}
         <div className="flex gap-2">
           <button
             onClick={() => setSearchMode('keyword')}
@@ -70,7 +72,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Entries list */}
       <div className="space-y-4">
         {entries.map(entry => (
           <div key={entry.id} className="bg-gray-900 rounded-xl p-6 border border-gray-800">
@@ -86,7 +87,6 @@ export default function App() {
         ))}
       </div>
 
-      {/* Pagination — hide when searching */}
       {!isSearching && (
         <div className="flex justify-between mt-8">
           <button
