@@ -3,6 +3,7 @@ from app.db import get_connection
 import cohere
 import os
 from dotenv import load_dotenv
+from fastapi import APIRouter, HTTPException
 
 load_dotenv()
 co = cohere.ClientV2(api_key=os.environ.get("COHERE_API_KEY"))
@@ -17,6 +18,8 @@ LIMIT 5;"""
 
 @semantic_router.get("/semantic_search")
 def semantic_search(word):
+    if not word or not word.strip():
+        raise HTTPException(status_code=422, detail="Query cannot be empty")
     conn = get_connection()
     cursor = conn.cursor()
     

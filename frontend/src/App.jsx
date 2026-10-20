@@ -21,7 +21,7 @@ export default function App() {
     if (isSearching) return
     fetch(`http://localhost:8000/entries?limit=${limit}&offset=${offset}`)
       .then(res => res.json())
-      .then(data => setEntries(data))
+      .then(data =>  setEntries(data))
   }, [offset, isSearching])
 
   useEffect(() => {

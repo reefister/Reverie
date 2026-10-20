@@ -6,6 +6,7 @@ from itertools import combinations
 import cohere
 import os
 from dotenv import load_dotenv
+from fastapi import APIRouter, HTTPException
 
 load_dotenv()
 co = cohere.ClientV2(api_key=os.environ.get("COHERE_API_KEY"))
@@ -40,7 +41,8 @@ Keep your answer concise — under 250 words."""
 
 @insights_router.get("/insights")
 def insights(q:str,k: int=5):
-   
+    if not q or not q.strip():
+        raise HTTPException(status_code=422, detail="Query cannot be empty")
     response = co.embed(
     texts=[q],
     model="embed-english-v3.0",
